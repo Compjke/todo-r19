@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "id": "35d02b5e-67d6-4c4f-a1ee-f7f5cc147b22",
+      "name": "dsa",
+      "email": "test@example.com"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-1",
+      "userId": "user-1",
+      "title": "Task 1 for user 1",
+      "completed": false
+    },
+    {
+      "id": "task-2",
+      "userId": "user-1",
+      "title": "Task 2 for user 1",
+      "completed": true
+    },
+    {
+      "id": "task-1",
+      "userId": "user-2",
+      "title": "Task 1 for user 2",
+      "completed": false
+    },
+    {
+      "id": "task-2",
+      "userId": "user-2",
+      "title": "Task 2 for user 2",
+      "completed": true
+    }
+  ]
+}
