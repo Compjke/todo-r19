@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createTask, deleteTask, updateTask, type Task } from '../../shared/api'
+import { createTask, deleteTask, updateTask } from '../../shared/api'
 import { v4 as uuidv4 } from 'uuid'
 type CreateActionState = {
   error?: string
