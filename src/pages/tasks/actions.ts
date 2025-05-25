@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createTask, deleteTask, type Task } from '../../shared/api'
+import { createTask, deleteTask, updateTask, type Task } from '../../shared/api'
 import { v4 as uuidv4 } from 'uuid'
 type CreateActionState = {
   error?: string
@@ -7,6 +7,11 @@ type CreateActionState = {
 }
 type DeleteActionState = {
   error?: string
+}
+
+type UpdateActionState = {
+  error?: string
+  done: boolean
 }
 
 export type CreateTaskAction = (
@@ -24,7 +29,7 @@ export const createTaskAction =
   }): CreateTaskAction =>
   async (_prevState, formData) => {
     const title = formData.get('title') as string
-    const createdAt = new Date().toISOString()
+    const createdAt = new Date()
     try {
       await createTask({
         id: uuidv4(),
@@ -36,12 +41,41 @@ export const createTaskAction =
       refetchTasks()
       return {
         error: undefined,
-        title,
+        title: '',
       }
     } catch (err) {
       return {
         error: `Failed to create task ${err}`,
         title,
+      }
+    }
+  }
+
+export type UpdateTaskAction = (
+  state: UpdateActionState,
+  upates: { done: boolean; taskId: string },
+) => Promise<UpdateActionState>
+
+export const updateTaskAction =
+  ({
+    refetchTasks,
+  }: {
+    refetchTasks: () => void
+    done: boolean
+    taskId: string
+  }): UpdateTaskAction =>
+  async (_prevState, { done, taskId }) => {
+    try {
+      await updateTask(taskId, { done })
+      refetchTasks()
+      return {
+        error: undefined,
+        done,
+      }
+    } catch (error) {
+      return {
+        error: `Failed to update task ${error}`,
+        done,
       }
     }
   }

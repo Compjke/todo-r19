@@ -49,37 +49,42 @@ export type Task = {
   title: string
   done: boolean
   userId: string
-  createdAt: string
+  createdAt: Date
   userName?: string
 }
 export const fetchTasks = async ({
   page = 1,
-  limit = 10,
+  limit = undefined,
   title = '',
-  userId = '',
-  sortBy = '',
-  order = 'asc',
+  done = undefined,
+  userId = undefined,
+  orderBy = 'createdAt', // Default sort by createdAt
+  order = 'desc', // Default descending order
 }: {
   page?: number
   limit?: number
   title?: string
-  sortBy?: string
   userId?: User['id']
+  orderBy?: string
+  search?: string
   order?: 'asc' | 'desc'
+  done?: boolean
 }): Promise<Task[]> => {
-  const response = await fetch(
-    `${API_URL}/tasks?page=${page}&limit=${limit}&title=${title}&sortBy=${sortBy}&order=${order}${
-      userId ? `&userId=${userId}` : ''
-    }`,
+  const url = new URL(
+    `${API_URL}/tasks?page=${page}&limit=${
+      limit || 10
+    }&orderBy=${orderBy}&order=${order}&userId=${
+      userId || ''
+    }&title=${title}&done=${done === undefined ? '' : done}`,
   )
 
-  if (response.status === 404) {
-    return []
-    throw new Error('Task not found')
-  }
-  if (!response.ok) {
-    throw new Error('Failed to fetch tasks')
-  }
+  const response = await fetch(url.toString(), {
+    method: 'GET',
+    headers: { 'content-type': 'application/json' },
+  })
+
+  if (response.status === 404) return []
+  if (!response.ok) throw new Error('Failed to fetch tasks')
   return response.json()
 }
 
